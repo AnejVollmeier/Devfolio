@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevFolio - Upravljanje</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="index.html">
+                <i class="bi bi-code-slash"></i> DevFolio
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Domov</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="project.html">Projekti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Prijava</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Registracija</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="management.html">Upravljanje</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-5">
+        <div class="container py-5">
+            
+            <!-- Uporabniki Section -->
+            <section class="mb-5">
+                <h1 class="display-4 fw-bold text-center mb-5 text-primary">
+                    <i class="bi bi-people-fill"></i> Uporabniki
+                </h1>
+                
+                <!-- Seznam uporabnikov -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-secondary text-white">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-list-ul"></i> Seznam uporabnikov
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Ime</th>
+                                                <th>Email</th>
+                                                <th>Vloga</th>
+                                                <th>Datum registracije</th>
+                                                <th>Akcije</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="usersTableBody">
+                                            <!-- Uporabniki se bodo naložili dinamično -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tehnologije Section -->
+            <section class="mb-5">
+                <h1 class="display-4 fw-bold text-center mb-5 text-success">
+                    <i class="bi bi-gear-fill"></i> Tehnologije
+                </h1>
+                
+                <!-- Dodaj novo tehnologijo -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-success text-white">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-plus-square"></i> Dodaj novo tehnologijo
+                                </h4>
+                            </div>
+                            <div class="card-body">                                <form id="technologyForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="techName" class="form-label">Ime tehnologije</label>
+                                            <input type="text" class="form-control" id="techName" name="name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-mb-6 mb-3">
+                                        <label for="techDescription" class="form-label">Opis</label>
+                                        <textarea class="form-control" id="techDescription" name="description" rows="3" required></textarea>
+                                    </div>                                    <div class="mb-3">
+                                        <label for="techImage" class="form-label">Slika tehnologije</label>
+                                        <input type="file" class="form-control" id="techImage" name="image_file" accept="image/*">
+                                        <div class="form-text">Podprte so slike: JPG, PNG, GIF (max 5MB)</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-plus-circle"></i> Dodaj tehnologijo
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seznam tehnologij -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-secondary text-white">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-list-ul"></i> Seznam tehnologij
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row" id="technologiesContainer">
+                                    <!-- Tehnologije se bodo naložile dinamično -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projekti Section -->
+            <section class="mb-5">
+                <h1 class="display-4 fw-bold text-center mb-5 text-warning">
+                    <i class="bi bi-folder-fill"></i> Projekti
+                </h1>
+                
+                <!-- Dodaj nov projekt -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-warning text-dark">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-folder-plus"></i> Dodaj nov projekt
+                                </h4>
+                            </div>
+                            <div class="card-body">                                <form id="projectForm">
+                                    <div class="row">
+                                        <div class="col-md-8 mb-3">
+                                            <label for="projectTitle" class="form-label">Naslov projekta <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="projectTitle" maxlength="20" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="projectDescription" class="form-label">Opis projekta <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="projectDescription" rows="4" required></textarea>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectGithub" class="form-label">GitHub URL <span class="text-danger">*</span></label>
+                                            <input type="url" class="form-control" id="projectGithub" maxlength="100" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="projectAddress" class="form-label">Naslov URL</label>
+                                            <input type="url" class="form-control" id="projectAddress" maxlength="100">
+                                        </div>
+                                    </div>                                    <div class="mb-3">
+                                        <label for="projectImage" class="form-label">Slika projekta</label>
+                                        <input type="file" class="form-control" id="projectImage" name="image_file" accept="image/*">
+                                        <div class="form-text">Podprte so slike: JPG, PNG, GIF (max 5MB)</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="projectTechnologies" class="form-label">Uporabljene tehnologije</label>
+                                        <div class="row" id="technologiesCheckboxes">
+                                            <!-- Tehnologije se bodo naložile dinamično kot checkboxi -->
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-warning text-dark">
+                                        <i class="bi bi-plus-circle"></i> Dodaj projekt
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seznam projektov -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow">
+                            <div class="card-header bg-secondary text-white">
+                                <h4 class="mb-0">
+                                    <i class="bi bi-list-ul"></i> Seznam projektov
+                                </h4>
+                            </div>                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Slika</th>
+                                                <th>Naslov</th>
+                                                <th>Datum nastanka</th>
+                                                <th>Akcije</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="projectsTableBody">
+                                            <!-- Projekti se bodo naložili dinamično -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>        </div>
+    </main>
+
+    <!-- Edit Technology Modal -->
+    <div class="modal fade" id="editTechnologyModal" tabindex="-1" aria-labelledby="editTechnologyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="editTechnologyModalLabel">
+                        <i class="bi bi-pencil-square"></i> Uredi tehnologijo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editTechnologyForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editTechName" class="form-label">Ime tehnologije</label>
+                            <input type="text" class="form-control" id="editTechName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTechDescription" class="form-label">Opis</label>
+                            <textarea class="form-control" id="editTechDescription" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTechImage" class="form-label">Nova slika tehnologije (neobvezno)</label>
+                            <input type="file" class="form-control" id="editTechImage" name="image_file" accept="image/*">
+                            <div class="form-text">Pustite prazno, če ne želite spremeniti slike. Podprte so slike: JPG, PNG, GIF (max 5MB)</div>
+                        </div>
+                        <div class="mb-3" id="currentImagePreview" style="display: none;">
+                            <label class="form-label">Trenutna slika:</label>
+                            <div>
+                                <img id="currentTechImage" src="" alt="Trenutna slika" style="max-width: 200px; max-height: 150px; object-fit: contain; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle"></i> Prekliči
+                        </button>
+                        <button type="submit" class="btn btn-warning text-dark">
+                            <i class="bi bi-check-circle"></i> Posodobi tehnologijo
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Project Modal -->
+    <div class="modal fade" id="editProjectModal" tabindex="-1" aria-labelledby="editProjectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="editProjectModalLabel">
+                        <i class="bi bi-pencil-square"></i> Uredi projekt
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editProjectForm">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="editProjectTitle" class="form-label">Naslov projekta <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="editProjectTitle" maxlength="20" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProjectDescription" class="form-label">Opis projekta <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="editProjectDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editProjectGithub" class="form-label">GitHub URL <span class="text-danger">*</span></label>
+                                <input type="url" class="form-control" id="editProjectGithub" maxlength="100" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editProjectAddress" class="form-label">Naslov URL</label>
+                                <input type="url" class="form-control" id="editProjectAddress" maxlength="100">
+                            </div>
+                        </div>                        <div class="mb-3">
+                            <label for="editProjectImage" class="form-label">Nova slika projekta (neobvezno)</label>
+                            <input type="file" class="form-control" id="editProjectImage" name="image_file" accept="image/*">
+                            <div class="form-text">Pustite prazno, če ne želite spremeniti slike. Podprte so slike: JPG, PNG, GIF (max 5MB)</div>
+                        </div>
+                        <div class="mb-3" id="currentProjectImagePreview" style="display: none;">
+                            <label class="form-label">Trenutna slika:</label>
+                            <div>
+                                <img id="currentProjectImage" src="" alt="Trenutna slika" style="max-width: 200px; max-height: 150px; object-fit: contain; border: 1px solid #ddd; border-radius: 5px;">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProjectTechnologies" class="form-label">Uporabljene tehnologije</label>
+                            <div class="row" id="editTechnologiesCheckboxes">
+                                <!-- Tehnologije se bodo naložile dinamično kot checkboxi -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle"></i> Prekliči
+                        </button>
+                        <button type="submit" class="btn btn-warning text-dark">
+                            <i class="bi bi-check-circle"></i> Posodobi projekt
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS - navbar must load first! -->
+    <script src="../js/navbar.js"></script>
+    <script src="../js/managment.js"></script>
+</body>
+</html>

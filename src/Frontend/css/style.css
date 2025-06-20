@@ -1,0 +1,388 @@
+/* Login Page Styles */
+.login-card {
+    margin-top: 50px;
+}
+
+/* Additional spacing for better visual separation */
+.login-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Fix for Bootstrap grid layout */
+#projects-container {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+#projects-container > .col-12,
+#projects-container > .col-sm-6,
+#projects-container > .col-md-4,
+#projects-container > .col-lg-4 {
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+/* Responsive column widths */
+@media (min-width: 576px) {
+    #projects-container > .col-sm-6 {
+        width: 50%;
+    }
+}
+
+@media (min-width: 768px) {
+    #projects-container > .col-md-4 {
+        width: 33.33333%;
+    }
+}
+
+@media (min-width: 992px) {
+    #projects-container > .col-lg-4 {
+        width: 33.33333%;
+    }
+}
+
+/* Projects Page Styles */
+.project-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: none;
+    overflow: hidden;
+    background: white;
+    border-radius: 15px;
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card-img-wrapper {
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+
+.project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.project-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.project-card:hover .project-image {
+    transform: scale(1.1);
+}
+
+.project-title {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #333;
+    margin: 0;
+    padding: 1.5rem;
+    background: white;
+}
+
+.project-card-img {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover .project-card-img {
+    transform: scale(1.05);
+}
+
+.project-card-body {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.project-card-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.project-card-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.project-status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+/* Project Info Page Styles */
+.project-hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.project-detail-card {
+    transition: transform 0.2s ease;
+}
+
+.project-detail-card:hover {
+    transform: translateY(-2px);
+}
+
+.project-tech-card {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.project-tech-card:hover {
+    border-color: #007bff;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.1);
+}
+
+.project-gallery-image {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.project-gallery-image:hover {
+    transform: scale(1.05);
+}
+
+.project-link-btn {
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+}
+
+.project-link-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.spec-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+/* Hidden Content Styles */
+.hidden-content-placeholder {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.hidden-content-placeholder:hover {
+    border-color: #007bff;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+}
+
+.hidden-content-placeholder .bi-lock-fill {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.hidden-profile-circle {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 3px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.hidden-profile-circle:hover {
+    border-color: #007bff;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+}
+
+/* User Dropdown Styles */
+.dropdown-toggle::after {
+    margin-left: 0.5em;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    min-width: 180px;
+}
+
+.dropdown-header {
+    color: #6c757d;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+}
+
+.dropdown-item i {
+    width: 1rem;
+    text-align: center;
+}
+
+/* Navbar user info styling */
+.nav-link.dropdown-toggle {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75) !important;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link.dropdown-toggle:hover {
+    color: rgba(255, 255, 255, 1) !important;
+}
+
+.nav-link.dropdown-toggle .bi-person-circle {
+    font-size: 1.25rem;
+}
+
+/* Navbar alignment fixes */
+/* Create a flexible navbar layout: brand | center-nav | user-dropdown */
+.navbar-nav {
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+}
+
+/* Push dropdown to the right */
+.navbar-nav .nav-item.flex-fill {
+    flex: 1;
+}
+
+/* Position user dropdown absolutely to the right */
+.navbar-nav .nav-item.dropdown {
+    position: absolute;
+    right: 0px; /* More spacing from the right edge for desktop */
+}
+
+/* Make all nav-items consistent */
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+/* Make all nav-links consistent in height and alignment */
+.navbar-nav .nav-link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+/* Specific alignment for dropdown items */
+.navbar-nav .nav-item.dropdown {
+    display: flex;
+    align-items: center;
+}
+
+/* Adjust icon alignment inside dropdown toggle */
+.nav-link.dropdown-toggle i {
+    display: flex;
+    align-items: center;
+}
+
+/* Ensure dropdown menu appears in correct position */
+.dropdown-menu-end {
+    right: 0;
+    left: auto;
+}
+
+/* Fix alignment on mobile */
+@media (max-width: 991.98px) {
+    .navbar-nav .nav-item,
+    .navbar-nav .nav-item.dropdown {
+        display: block;
+        position: static; /* Reset positioning on mobile */
+    }
+    
+    .navbar-nav .nav-item.dropdown {
+        margin-top: 0.5rem; /* Add spacing between items */
+    }
+    
+    .navbar-nav .nav-link,
+    .nav-link.dropdown-toggle {
+        padding: 0.5rem 0;
+    }
+}
+.btn-xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Ensure proper spacing on smaller screens */
+@media (max-width: 768px) {
+    .login-card {
+        margin-top: 80px;
+    }
+    
+    .login-container {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .project-card-img {
+        height: 180px;
+    }
+
+    .project-card-body {
+        padding: 1rem;
+    }
+
+    .project-link-btn {
+        font-size: 0.875rem;
+        padding: 0.4rem 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .project-tech-card {
+        margin-bottom: 0.5rem;
+    }
+    
+    /* User dropdown adjustments for mobile */
+    .dropdown-menu {
+        min-width: 160px;
+        right: 0 !important;
+        left: auto !important;
+    }
+    
+    .nav-link.dropdown-toggle span {
+        display: none;
+    }
+    
+    .nav-link.dropdown-toggle .bi-person-circle {
+        font-size: 1.5rem;
+        margin-right: 0 !important;
+    }
+}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevFolio - Portfolio</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-3" href="#home">
+                <i class="bi bi-code-slash"></i> DevFolio
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Domov</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="project.html">Projekti</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Prijava</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">Registracija</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-5">
+        <!-- Hero Section -->
+        <section id="home" class="py-5 mt-4">
+            <div class="container">
+                <div class="row align-items-center">                    <div class="col-lg-4 col-md-5 mb-4 mb-md-0">
+                        <div id="profile-image-container" class="text-center">
+                            <img src="../img/profile_img.png" alt="Profil" 
+                                 class="img-fluid rounded-circle shadow-lg"
+                                 style="width: 300px; height: 300px; object-fit: cover;">
+                        </div>
+                    </div>
+                    
+                    <!-- Biography - Right Side (2/3) -->
+                    <div class="col-lg-8 col-md-7">
+                        <div class="ps-lg-4">
+                            <h1 class="display-4 fw-bold mb-4">Uvod</h1>
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <p class="mb-3">
+                                        Sem študent prvega letnika smeri informatika in podatkovne tehnologije.
+                                        V času študija sem pridobil osnovno razumevanje ključnih tehnologij,
+                                        ki se uporabljajo pri razvoju spletnih in programskih rešitev.
+                                        Spoznaval sem različna področja, od spletnega oblikovanja do programiranja in dela z bazami podatkov.
+                                        <br>
+                                        Pri razvoju spletnih strani uporabljam HTML in CSS, 
+                                        s katerima znam ustvariti strukturirano in vizualno privlačno postavitev. 
+                                        Za interaktivnost in dinamične funkcionalnosti sem se naučil uporabljati JavaScript, 
+                                        ki ga skupaj z Node.js uporabljam tudi za preproste strežniške rešitve. 
+                                        Poleg spletnega programiranja sem se srečal tudi z jezikom Java, 
+                                        kjer sem pridobil osnovno znanje objektno usmerjenega programiranja. 
+                                        Za shranjevanje in upravljanje podatkov uporabljam relacijsko podatkovno bazo MySQL.
+                                        <br>
+                                        Veselim se nadaljnjega študija in nadgrajevanja znanja ter praktičnih izkušenj, 
+                                       saj me področje informatike zelo zanima in v njem vidim svojo prihodnost.                                    
+                                       <div class="row" id="personal-data-education-selection">
+                                        <div id="personal-data-section" class="col-md-6">
+                                            <h5><i class="bi bi-person-fill text-primary"></i> Osebni podatki</h5>
+                                            <ul class="list-unstyled">
+                                                <li><strong>Ime:</strong> Anej Vollmeier</li>
+                                                <li><strong>Starost:</strong> 19 let</li>
+                                                <li><strong>Lokacija:</strong> Maribor, Slovenija</li>
+                                                <li><strong>Email:</strong> anej.vollmeier70@gmail.com</li>
+                                            </ul>
+                                        </div>
+                                        <div id="education-section" class="col-md-6">
+                                            <h5><i class="bi bi-mortarboard-fill text-primary"></i> Izobrazba</h5>
+                                            <ul class="list-unstyled">
+                                                <li><strong>Univerza v Mariboru</strong></li>
+                                                <li>Informatika in podatkovne tehnologije</li>
+                                                <li>2025 - 2027</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>        <!-- Technologies Section -->
+        <section id="technologies" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="text-center display-5 fw-bold mb-5">Tehnologije</h2>
+                
+                <!-- Loading indicator -->
+                <div id="technologies-loading" class="text-center mb-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Nalaganje...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Nalaganje tehnologij...</p>
+                </div>
+                
+                <!-- Dynamic technologies container -->
+                <div id="technologies-container" class="row g-4">
+                    <!-- Technologies will be loaded dynamically by JavaScript -->
+                </div>
+
+                <!-- Technology Description -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div id="tech-description" class="alert alert-info d-none">
+                            <h5 id="tech-title"></h5>
+                            <p id="tech-text" class="mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-center display-5 fw-bold mb-5">Kontakt</h2>
+                        
+                        <div class="card shadow">
+                            <div class="card-body p-5">
+                                <form id="contactForm">
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="firstName" class="form-label">Ime <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="firstName" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="lastName" class="form-label">Priimek <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="lastName" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="subject" class="form-label">Zadeva</label>
+                                        <input type="text" class="form-control" id="subject">
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="message" class="form-label">Sporočilo <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="message" rows="5" required></textarea>
+                                    </div>
+                                    
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-primary btn-lg px-5">
+                                            <i class="bi bi-send"></i> Pošlji sporočilo
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Info -->
+                        <div class="row mt-4">
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <i class="bi bi-geo-alt-fill fs-1 text-primary mb-3"></i>
+                                        <h5>Lokacija</h5>
+                                        <p class="text-muted">Maribor, Slovenija</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <i class="bi bi-envelope-fill fs-1 text-primary mb-3"></i>
+                                        <h5>Email</h5>
+                                        <p class="text-muted">anej.vollmeier70@gmail.com</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <i class="bi bi-phone-fill fs-1 text-primary mb-3"></i>
+                                        <h5>Telefon</h5>
+                                        <p class="text-muted">+386 70 781 815</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-code-slash"></i> DevFolio</h5>
+                    <p class="text-muted">Portfolio spletna stran za prikaz projektov in tehnologij.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h6>Sledite mi</h6>
+                    <a href="#" class="text-white me-3"><i class="bi bi-github fs-4"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-linkedin fs-4"></i></a>
+                    <a href="#" class="text-white"><i class="bi bi-twitter fs-4"></i></a>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="text-center">
+                <small>&copy; 2025 DevFolio. Vse pravice pridržane.</small>
+            </div>
+        </div>
+    </footer>    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="../js/navbar.js"></script>
+    <script src="../js/index.js"></script>
+</body>
+</html>
