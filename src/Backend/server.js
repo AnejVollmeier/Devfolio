@@ -61,3 +61,9 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Ensure CORS is properly configured
+app.use(cors({
+  origin: ['https://devfolio.si', 'http://localhost:3000'],
+  credentials: true
+}));
