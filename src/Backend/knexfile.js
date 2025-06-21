@@ -13,7 +13,7 @@ module.exports = {
       charset: 'utf8',
     },
     migrations: {
-      directory: './migrations', // Relativno glede na mesto klicanja
+      directory: './migrations',  // DODANO!
       tableName: 'knex_migrations'
     }
   },
@@ -27,7 +27,7 @@ module.exports = {
       max: 10
     },
     migrations: {
-      directory: './migrations', // Relativno glede na mesto klicanja 
+      directory: './migrations',  // Pustite to nespremenjeno
       tableName: 'knex_migrations'
     }
   }

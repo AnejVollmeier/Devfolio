@@ -1,4 +1,3 @@
-// Popravek za Messages tabelo
 exports.up = function(knex) {
   return knex.schema.createTable('Messages', function(table) {
     table.increments('id_Messages').primary();
@@ -7,4 +6,8 @@ exports.up = function(knex) {
     table.text('message').notNullable();
     table.timestamp('created_at').defaultTo(knex.fn.now()); // Sprememba iz date v timestamp
   });
+};
+
+exports.down = function(knex) {
+  return knex.schema.dropTable('Messages');
 };
