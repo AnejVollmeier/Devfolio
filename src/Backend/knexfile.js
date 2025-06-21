@@ -13,21 +13,24 @@ module.exports = {
       charset: 'utf8',
     },
     migrations: {
-      directory: './migrations',  // DODANO!
+      directory: './migrations',
       tableName: 'knex_migrations'
     }
   },
   
-  // Production config (Heroku + JawsDB)
+  // Production config (Render.com + Postgres)
   production: {
-    client: 'mysql2',
-    connection: process.env.JAWSDB_URL || process.env.DATABASE_URL,
+    client: 'pg',
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    },
     pool: {
       min: 2,
       max: 10
     },
     migrations: {
-      directory: './migrations',  // Pustite to nespremenjeno
+      directory: './migrations',
       tableName: 'knex_migrations'
     }
   }
