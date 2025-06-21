@@ -2,6 +2,9 @@
 // Global variables to store loaded data
 let currentTechnologies = [];
 
+// API Configuration
+const API_BASE_URL = 'https://api.devfolio.si';
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // Debug: Check what's in localStorage
@@ -54,7 +57,8 @@ async function loadUsers() {
             return;
         }
 
-        const response = await fetch('/users', {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/users`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -128,7 +132,8 @@ async function deleteUser(userId) {
             throw new Error('No authentication token found');
         }
 
-        const response = await fetch(`/users/${userId}`, {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -160,7 +165,8 @@ function editUser(userId) {
 // ============ TECHNOLOGIES SECTION ============
 async function loadTechnologies() {
     try {
-        const response = await fetch('/technologies', {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/technologies`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -169,7 +175,8 @@ async function loadTechnologies() {
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }        const technologies = await response.json();
+        }        
+        const technologies = await response.json();
         currentTechnologies = technologies; // Store in global variable
         displayTechnologies(technologies);
         loadTechnologiesCheckboxes(technologies); // Load checkboxes for project form
@@ -273,11 +280,16 @@ function displayTechnologies(technologies) {
         const col = document.createElement('div');
         col.className = 'col-md-4 col-sm-6 mb-3';
         
+        // Dodaj API_BASE_URL pred pot slike, če ne vsebuje že http
+        const imageUrl = tech.image_url ? 
+            (tech.image_url.startsWith('http') ? tech.image_url : `${API_BASE_URL}${tech.image_url}`) : 
+            '';
+            
         col.innerHTML = `
             <div class="card h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-2">
-                        ${tech.image_url ? `<img src="${tech.image_url}" alt="${tech.name}" class="me-2" style="width: 32px; height: 32px; object-fit: contain;">` : ''}
+                        ${imageUrl ? `<img src="${imageUrl}" alt="${tech.name}" class="me-2" style="width: 32px; height: 32px; object-fit: contain;">` : ''}
                         <h5 class="card-title mb-0">${escapeHtml(tech.name)}</h5>
                     </div>
                 </div>
@@ -318,7 +330,11 @@ function showEditTechnologyModal(technology) {
     const currentTechImage = document.getElementById('currentTechImage');
     
     if (technology.image_url) {
-        currentTechImage.src = technology.image_url;
+        // Dodaj API_BASE_URL pred pot slike, če ne vsebuje že http
+        currentTechImage.src = technology.image_url.startsWith('http') ? 
+            technology.image_url : 
+            `${API_BASE_URL}${technology.image_url}`;
+            
         currentImagePreview.style.display = 'block';
         // Reset label text
         const label = currentImagePreview.querySelector('.form-label');
@@ -375,7 +391,8 @@ async function deleteTechnology(techId) {
             return;
         }
 
-        const response = await fetch(`/technologies/${techId}`, {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/technologies/${techId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -409,7 +426,8 @@ async function loadProjects() {
             return;
         }
 
-        const response = await fetch('/projects', {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/projects`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -454,11 +472,16 @@ function displayProjects(projects) {
         
         const createdDate = new Date(project.created_at).toLocaleDateString('sl-SI');
         
+        // Dodaj API_BASE_URL pred pot slike, če ne vsebuje že http
+        const imageUrl = project.image_url ? 
+            (project.image_url.startsWith('http') ? project.image_url : `${API_BASE_URL}${project.image_url}`) : 
+            '';
+        
         row.innerHTML = `
             <td>${project.id_Project}</td>
             <td>
-                ${project.image_url ? 
-                    `<img src="${project.image_url}" alt="${escapeHtml(project.title)}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">` : 
+                ${imageUrl ? 
+                    `<img src="${imageUrl}" alt="${escapeHtml(project.title)}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">` : 
                     '<span class="text-muted">Ni slike</span>'
                 }
             </td>
@@ -485,8 +508,8 @@ async function editProject(projectId) {
             return;
         }
 
-        // Fetch project data
-        const response = await fetch(`/projects/${projectId}`, {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -499,7 +522,8 @@ async function editProject(projectId) {
         }
 
         const project = await response.json();
-          // Populate edit form
+        
+        // Populate edit form
         document.getElementById('editProjectTitle').value = project.title || '';
         document.getElementById('editProjectDescription').value = project.description || '';
         document.getElementById('editProjectGithub').value = project.github_url || '';
@@ -509,7 +533,11 @@ async function editProject(projectId) {
         const currentImagePreview = document.getElementById('currentProjectImagePreview');
         const currentImage = document.getElementById('currentProjectImage');
         if (project.image_url) {
-            currentImage.src = project.image_url;
+            // Dodaj API_BASE_URL pred pot slike, če ne vsebuje že http
+            currentImage.src = project.image_url.startsWith('http') ? 
+                project.image_url : 
+                `${API_BASE_URL}${project.image_url}`;
+                
             currentImagePreview.style.display = 'block';
         } else {
             currentImagePreview.style.display = 'none';
@@ -539,7 +567,8 @@ async function deleteProject(projectId) {
             return;
         }
 
-        const response = await fetch(`/projects/${projectId}`, {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -569,11 +598,13 @@ function setupFormListeners() {
     const userForm = document.getElementById('userForm');
     if (userForm) {
         userForm.addEventListener('submit', handleUserFormSubmit);
-    }    // Technology form
+    }    
+    // Technology form
     const technologyForm = document.getElementById('technologyForm');
     if (technologyForm) {
         technologyForm.addEventListener('submit', handleTechnologyFormSubmit);
-    }    // Edit Technology form
+    }    
+    // Edit Technology form
     const editTechnologyForm = document.getElementById('editTechnologyForm');
     if (editTechnologyForm) {
         editTechnologyForm.addEventListener('submit', handleEditTechnologyFormSubmit);
@@ -636,7 +667,8 @@ async function handleTechnologyFormSubmit(event) {
             return;
         }
 
-        const response = await fetch('/technologies', {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/technologies`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -707,7 +739,8 @@ async function handleEditTechnologyFormSubmit(event) {
             return;
         }
 
-        const response = await fetch(`/technologies/${techId}`, {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/technologies/${techId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -805,7 +838,8 @@ async function handleProjectFormSubmit(event) {
             return;
         }
 
-        const response = await fetch('/projects', {
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/projects`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -847,7 +881,8 @@ async function handleEditProjectFormSubmit(event) {
     if (!projectId) {
         showError('ID projekta ni bil najden');
         return;
-    }    // Get form values
+    }    
+    // Get form values
     const title = document.getElementById('editProjectTitle').value.trim();
     const description = document.getElementById('editProjectDescription').value.trim();
     const github_url = document.getElementById('editProjectGithub').value.trim();
@@ -904,7 +939,10 @@ async function handleEditProjectFormSubmit(event) {
         if (!token) {
             showError('Niste prijavljeni');
             return;
-        }        const response = await fetch(`/projects/${projectId}`, {
+        }        
+        
+        // Dodaj API_BASE_URL pred pot
+        const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -985,35 +1023,37 @@ function showAlert(message, type) {
 }
 
 // Reset form when modal is hidden
-    const editModal = document.getElementById('editTechnologyModal');
-    if (editModal) {
-        editModal.addEventListener('hidden.bs.modal', function () {
-            const form = document.getElementById('editTechnologyForm');
-            if (form) {
-                form.reset();
-                form.removeAttribute('data-tech-id');
-                
-                // Hide image preview
-                const currentImagePreview = document.getElementById('currentImagePreview');
-                if (currentImagePreview) {
-                    currentImagePreview.style.display = 'none';
-                }
+const editModal = document.getElementById('editTechnologyModal');
+if (editModal) {
+    editModal.addEventListener('hidden.bs.modal', function () {
+        const form = document.getElementById('editTechnologyForm');
+        if (form) {
+            form.reset();
+            form.removeAttribute('data-tech-id');
+            
+            // Hide image preview
+            const currentImagePreview = document.getElementById('currentImagePreview');
+            if (currentImagePreview) {
+                currentImagePreview.style.display = 'none';
             }
-        });
-    }    // Reset project form when modal is hidden
-    const editProjectModal = document.getElementById('editProjectModal');
-    if (editProjectModal) {
-        editProjectModal.addEventListener('hidden.bs.modal', function () {
-            const form = document.getElementById('editProjectForm');
-            if (form) {
-                form.reset();
-                form.removeAttribute('data-project-id');
-                
-                // Hide image preview
-                const currentImagePreview = document.getElementById('currentProjectImagePreview');
-                if (currentImagePreview) {
-                    currentImagePreview.style.display = 'none';
-                }
+        }
+    });
+}    
+
+// Reset project form when modal is hidden
+const editProjectModal = document.getElementById('editProjectModal');
+if (editProjectModal) {
+    editProjectModal.addEventListener('hidden.bs.modal', function () {
+        const form = document.getElementById('editProjectForm');
+        if (form) {
+            form.reset();
+            form.removeAttribute('data-project-id');
+            
+            // Hide image preview
+            const currentImagePreview = document.getElementById('currentProjectImagePreview');
+            if (currentImagePreview) {
+                currentImagePreview.style.display = 'none';
             }
-        });
-    }
+        }
+    });
+}
