@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.string('email', 100).notNullable().unique();
     table.string('username', 20).notNullable().unique();
     table.string('password', 200).notNullable();
-    table.date('created_at').defaultTo(knex.fn.now());
+    table.timestamp('created_at').defaultTo(knex.fn.now()); // Sprememba iz date v timestamp
     table.integer('TK_idUserType').unsigned().notNullable();
     table.foreign('TK_idUserType').references('id_UserType').inTable('UserType')
       .onDelete('RESTRICT')
