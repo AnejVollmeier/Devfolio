@@ -42,7 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 // API call to backend login endpoint
-                const response = await fetch('http://localhost:3000/login', {
+                // SPREMEMBA: localhost:3000 -> api.devfolio.si
+                const response = await fetch('https://api.devfolio.si/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

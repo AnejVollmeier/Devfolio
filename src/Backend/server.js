@@ -1,10 +1,19 @@
 var express = require('express');
 const path = require('path');
 const knex = require('./knex');
+const cors = require('cors'); // Dodaj manjkajoči import za cors
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 var app = express();
 
-// CORS middleware
+// CORS middleware z dodatkom domene devfolio.si
+app.use(cors({
+  origin: ['https://devfolio.si', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization'],
+  credentials: true
+}));
+
+// Ohrani obstoječi middleware za varnost
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -61,9 +70,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-// Ensure CORS is properly configured
-app.use(cors({
-  origin: ['https://devfolio.si', 'http://localhost:3000'],
-  credentials: true
-}));

@@ -1,5 +1,6 @@
 // API Configuration
-const API_BASE_URL = window.location.origin; // Use same origin as the page
+// SPREMEMBA: window.location.origin -> api.devfolio.si
+const API_BASE_URL = 'https://api.devfolio.si';
 
 // Load projects from backend
 async function loadProjects() {
@@ -96,7 +97,7 @@ async function loadProjects() {
                     <div class="alert alert-warning" role="alert">
                         <i class="bi bi-exclamation-triangle me-2"></i>
                         <strong>Strežnik ni dostopen</strong><br>
-                        Preverite, ali je backend strežnik zagnan. Za razvoj zaženite <code>npm start</code> v backend mapi.
+                        API strežnik trenutno ni dostopen. Poskusite znova kasneje.
                     </div>
                 `;
                 errorElement.style.display = 'block';
@@ -204,10 +205,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // First check if server is running by making a simple test request
     try {
-        const testResponse = await fetch(`${API_BASE_URL}/`, {
+        const testResponse = await fetch(`${API_BASE_URL}/api/status`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
+        console.log("API status check:", testResponse.status);
     } catch (error) {
         console.warn('Server connection test failed:', error);
     }

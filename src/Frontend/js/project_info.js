@@ -1,5 +1,6 @@
 // API Configuration
-const API_BASE_URL = window.location.origin; // Use same origin as the page
+// SPREMEMBA: window.location.origin -> api.devfolio.si
+const API_BASE_URL = 'https://api.devfolio.si';
 
 // DOM elements
 let loadingSection, detailsSection, errorSection;

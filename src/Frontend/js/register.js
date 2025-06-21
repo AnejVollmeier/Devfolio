@@ -85,7 +85,8 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     
     try {
         // API call to backend register endpoint
-        const response = await fetch('http://localhost:3000/register', {
+        // SPREMEMBA: localhost:3000 -> api.devfolio.si
+        const response = await fetch('https://api.devfolio.si/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
