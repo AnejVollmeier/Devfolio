@@ -11,6 +11,10 @@ module.exports = {
       database: 'devfolio',
       port: 3306,
       charset: 'utf8',
+    },
+    migrations: {
+      directory: './migrations', // Relativno glede na mesto klicanja
+      tableName: 'knex_migrations'
     }
   },
   
@@ -23,6 +27,7 @@ module.exports = {
       max: 10
     },
     migrations: {
+      directory: './migrations', // Relativno glede na mesto klicanja 
       tableName: 'knex_migrations'
     }
   }
