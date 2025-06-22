@@ -1,6 +1,6 @@
 // API Configuration
 // SPREMEMBA: window.location.origin -> api.devfolio.si
-const API_BASE_URL = 'https://api.devfolio.si';
+const API_BASE_URL = 'https://devfolio-nu8o.onrender.com';
 
 // Hide/show personal information based on login status
 function updatePersonalInfo() {

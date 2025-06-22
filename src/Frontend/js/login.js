@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 // API call to backend login endpoint
                 // SPREMEMBA: localhost:3000 -> api.devfolio.si
-                const response = await fetch('https://api.devfolio.si/login', {
+                const response = await fetch('https://devfolio-nu8o.onrender.com/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

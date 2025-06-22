@@ -1,6 +1,6 @@
 // API Configuration
 // SPREMEMBA: window.location.origin -> api.devfolio.si
-const API_BASE_URL = 'https://api.devfolio.si';
+const API_BASE_URL = 'https://devfolio-nu8o.onrender.com';
 
 // DOM elements
 let loadingSection, detailsSection, errorSection;

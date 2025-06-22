@@ -3,7 +3,7 @@
 let currentTechnologies = [];
 
 // API Configuration
-const API_BASE_URL = 'https://api.devfolio.si';
+const API_BASE_URL = 'https://devfolio-nu8o.onrender.com';
 
 document.addEventListener('DOMContentLoaded', function() {
     
