@@ -39,8 +39,8 @@ app.get('/', (req, res) => {
   });
 });
 
-// Samo pot za statične slike - ostale poti niso potrebne ker bo frontend na Netlify
-app.use('/images', express.static(path.join(__dirname, 'images')));
+// SPREMEMBA: Odstranili smo statično posredovanje slik, ker zdaj uporabljamo Cloudinary
+// app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // Nalaganje API poti
 const loginRoutes = require('./routes/login');
