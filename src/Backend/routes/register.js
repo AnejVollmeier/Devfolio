@@ -50,19 +50,19 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ message: 'Neveljaven tip uporabnika' });
         }
 
-        // Ustvari novega uporabnika - POPRAVLJENO
+        // Ustvari novega uporabnika - POPRAVLJENO IME STOLPCA id_User
         const [result] = await knex('Users').insert({
             email,
             username,
             password: hashedPassword,
             TK_idUserType: userTypeRecord.id_UserType
-        }).returning('id_user');
+        }).returning('id_User');  // Spremenjeno iz 'id_user' v 'id_User'
 
-        // Vrni uspešen odgovor (brez gesla) - POPRAVLJENO
+        // Vrni uspešen odgovor (brez gesla)
         res.status(201).json({
             message: 'Uporabnik uspešno registriran',
             user: {
-                id: result.id_user,
+                id: result.id_User,  // Spremenjeno iz 'id_user' v 'id_User'
                 email,
                 username,
                 role: userType
