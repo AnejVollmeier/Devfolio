@@ -1,46 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const knex = require('../knex');
-const { isAdmin} = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, '../images/technologies');
-        // Create directory if it doesn't exist
-        if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-        }
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        // Generate unique filename: timestamp + original extension
-        const uniqueName = `tech_${Date.now()}${path.extname(file.originalname)}`;
-        cb(null, uniqueName);
-    }
-});
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
-    },
-    fileFilter: function (req, file, cb) {
-        // Allow only image files
-        const allowedTypes = /jpeg|jpg|png|gif/;
-        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = allowedTypes.test(file.mimetype);
-        
-        if (mimetype && extname) {
-            return cb(null, true);
-        } else {
-            cb(new Error('Samo slike so dovoljene (JPG, PNG, GIF)'));
-        }
-    }
-});
+const { isAdmin } = require('../middleware/authMiddleware');
+const { technologyUpload, deleteImage } = require('../config/cloudinary');
 
 router.get('/', async (req, res) => {
     try{
@@ -77,6 +39,11 @@ router.delete('/:id', isAdmin, async (req, res) => {
             });
         }
 
+        // Izbriši sliko iz Cloudinary
+        if (existingTechnology.image_url) {
+            await deleteImage(existingTechnology.image_url);
+        }
+
         await knex('Technologies').where('id_Technologies', id).del();
 
         res.json({
@@ -89,7 +56,7 @@ router.delete('/:id', isAdmin, async (req, res) => {
     }
 });
 
-router.post('/', isAdmin, upload.single('image'), async (req, res) => {
+router.post('/', isAdmin, technologyUpload.single('image'), async (req, res) => {
     try {
         const { name, description } = req.body;
 
@@ -97,14 +64,12 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'Ime in opis tehnologije sta obvezna' });
         }
 
-        // Generate image URL if file was uploaded
+        // Pridobi Cloudinary URL iz naložene datoteke
         let image_url = null;
         if (req.file) {
-            // Create relative URL for accessing the image
-            image_url = `/images/technologies/${req.file.filename}`;
+            image_url = req.file.path;
         }
 
-        // POPRAVLJENO: Pravilno zajemanje ID-ja po vstavljanju
         const [result] = await knex('Technologies').insert({
             name,
             description,
@@ -120,24 +85,17 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
         });
     } catch (error) {
         console.error('Napaka pri ustvarjanju tehnologije:', error);
-        // If there was an error and file was uploaded, delete it
-        if (req.file) {
-            try {
-                fs.unlinkSync(req.file.path);
-            } catch (unlinkError) {
-                console.error('Error deleting uploaded file:', unlinkError);
-            }
-        }
         
-        if (error.message.includes('Samo slike so dovoljene')) {
-            return res.status(400).json({ error: error.message });
+        // Če je bila slika naložena in je prišlo do napake, jo izbrišemo iz Cloudinary
+        if (req.file && req.file.path) {
+            await deleteImage(req.file.path);
         }
         
         res.status(500).json({ error: 'Napaka pri ustvarjanju tehnologije' });
     }
 });
 
-router.put('/:id', isAdmin, upload.single('image'), async (req, res) => {
+router.put('/:id', isAdmin, technologyUpload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description } = req.body;
@@ -156,18 +114,11 @@ router.put('/:id', isAdmin, upload.single('image'), async (req, res) => {
     
     // Handle image upload
     if (req.file) {
-      updateData.image_url = `/images/technologies/${req.file.filename}`;
+      updateData.image_url = req.file.path;
       
-      // Delete old image file if it exists
-      if (existingTechnology.image_url && existingTechnology.image_url.startsWith('/images/technologies/')) {
-        const oldImagePath = path.join(__dirname, '..', existingTechnology.image_url);
-        try {
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
-        } catch (error) {
-          console.error('Error deleting old image:', error);
-        }
+      // Delete old image from Cloudinary if it exists
+      if (existingTechnology.image_url) {
+        await deleteImage(existingTechnology.image_url);
       }
     } else {
       // Keep existing image_url if no new file uploaded
@@ -188,17 +139,9 @@ router.put('/:id', isAdmin, upload.single('image'), async (req, res) => {
   } catch (error) {
     console.error('Napaka pri posodabljanju tehnologije:', error);
     
-    // If there was an error and file was uploaded, delete it
-    if (req.file) {
-      try {
-        fs.unlinkSync(req.file.path);
-      } catch (unlinkError) {
-        console.error('Error deleting uploaded file:', unlinkError);
-      }
-    }
-    
-    if (error.message.includes('Samo slike so dovoljene')) {
-      return res.status(400).json({ error: error.message });
+    // Delete uploaded file if update failed
+    if (req.file && req.file.path) {
+      await deleteImage(req.file.path);
     }
     
     res.status(500).json({ error: 'Napaka pri posodabljanju tehnologije' });

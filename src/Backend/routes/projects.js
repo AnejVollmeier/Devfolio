@@ -2,41 +2,7 @@ const express = require('express');
 const router = express.Router();
 const knex = require('../knex');
 const { isAdmin, isRegistered } = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, '../images/projects');
-        // Create directory if it doesn't exist
-        if (!fs.existsSync(uploadPath)) {
-            fs.mkdirSync(uploadPath, { recursive: true });
-        }
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        // Generate unique filename: timestamp + original extension
-        const uniqueName = `project_${Date.now()}${path.extname(file.originalname)}`;
-        cb(null, uniqueName);
-    }
-});
-
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB limit
-    },
-    fileFilter: function (req, file, cb) {
-        // Allow only image files
-        if (file.mimetype.startsWith('image/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Samo slike so dovoljene!'), false);
-        }
-    }
-});
+const { projectUpload, deleteImage } = require('../config/cloudinary');
 
 // GET - Admin in registrirani uporabniki lahko vidijo projekte
 router.get('/', isRegistered, async (req, res) => {
@@ -49,7 +15,7 @@ router.get('/', isRegistered, async (req, res) => {
   }
 });
 
-// GET - Pridobi specifičen projekt po ID (temporarily without auth for testing)
+// GET - Pridobi specifičen projekt po ID
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -76,7 +42,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST - Samo admin lahko dodaja nove projekte
-router.post('/', isAdmin, upload.single('image'), async (req, res) => {
+router.post('/', isAdmin, projectUpload.single('image'), async (req, res) => {
   try {
     const { title, description, github_url, address_url, technologies } = req.body;
     
@@ -84,10 +50,10 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
       return res.status(400).json({ error: 'Naslov, opis in GitHub URL projekta so obvezni' });
     }
     
-    // Handle image upload
+    // Handle image upload - zdaj vrne Cloudinary URL
     let image_url = null;
     if (req.file) {
-      image_url = `/images/projects/${req.file.filename}`;
+      image_url = req.file.path;
     }
     
     // Parse technologies if provided
@@ -100,7 +66,7 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
       }
     }
     
-    // POPRAVLJENO: Pravilno zajemanje ID-ja po vstavljanju
+    // Vstavi projekt v bazo
     const [result] = await knex('Projects').insert({
       title,
       description,
@@ -132,11 +98,8 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
     console.error('Napaka pri ustvarjanju projekta:', error);
     
     // Delete uploaded file if project creation failed
-    if (req.file) {
-      const filePath = path.join(__dirname, '../images/projects', req.file.filename);
-      fs.unlink(filePath, (err) => {
-        if (err) console.error('Napaka pri brisanju datoteke:', err);
-      });
+    if (req.file && req.file.path) {
+      await deleteImage(req.file.path);
     }
     
     res.status(500).json({ error: 'Napaka pri ustvarjanju projekta' });
@@ -144,7 +107,7 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
 });
 
 // PUT - Samo admin lahko spreminja projekte
-router.put('/:id', isAdmin, upload.single('image'), async (req, res) => {
+router.put('/:id', isAdmin, projectUpload.single('image'), async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, github_url, address_url, technologies } = req.body;
@@ -158,16 +121,13 @@ router.put('/:id', isAdmin, upload.single('image'), async (req, res) => {
     // Handle image upload
     let image_url = existingProject.image_url; // Keep existing image by default
     if (req.file) {
-      // Delete old image if it exists
+      // Delete old image from Cloudinary if it exists
       if (existingProject.image_url) {
-        const oldImagePath = path.join(__dirname, '..', existingProject.image_url);
-        fs.unlink(oldImagePath, (err) => {
-          if (err) console.error('Napaka pri brisanju stare slike:', err);
-        });
+        await deleteImage(existingProject.image_url);
       }
       
-      // Set new image
-      image_url = `/images/projects/${req.file.filename}`;
+      // Set new image from Cloudinary
+      image_url = req.file.path;
     }
     
     // Parse technologies if provided
@@ -217,11 +177,8 @@ router.put('/:id', isAdmin, upload.single('image'), async (req, res) => {
     console.error('Napaka pri posodabljanju projekta:', error);
     
     // Delete uploaded file if update failed
-    if (req.file) {
-      const filePath = path.join(__dirname, '../images/projects', req.file.filename);
-      fs.unlink(filePath, (err) => {
-        if (err) console.error('Napaka pri brisanju datoteke:', err);
-      });
+    if (req.file && req.file.path) {
+      await deleteImage(req.file.path);
     }
     
     res.status(500).json({ error: 'Napaka pri posodabljanju projekta' });
@@ -242,12 +199,9 @@ router.delete('/:id', isAdmin, async (req, res) => {
     // Delete project-technology relationships first
     await knex('Technologies_Projects').where('TK_idProjects', id).del();
     
-    // Delete project image if it exists
+    // Delete project image from Cloudinary if it exists
     if (existingProject.image_url) {
-      const imagePath = path.join(__dirname, '..', existingProject.image_url);
-      fs.unlink(imagePath, (err) => {
-        if (err) console.error('Napaka pri brisanju slike:', err);
-      });
+      await deleteImage(existingProject.image_url);
     }
     
     // Izbriši projekt
