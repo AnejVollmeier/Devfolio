@@ -86,18 +86,18 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     try {
         // API call to backend register endpoint
         // SPREMEMBA: localhost:3000 -> api.devfolio.si
-        const response = await fetch('https://devfolio-nu8o.onrender.com', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: formData.email,
-                username: formData.username,
-                password: formData.password,
-                userType: 'Registered'
-            })
-        });
+        const response = await fetch('https://devfolio-nu8o.onrender.com/register', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        email: formData.email,
+        username: formData.username,
+        password: formData.password,
+        userType: 'Registered'
+    })
+});
 
         const data = await response.json();
 
