@@ -104,12 +104,15 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
             image_url = `/images/technologies/${req.file.filename}`;
         }
 
-        const [newTechnologyId] = await knex('Technologies').insert({
+        // POPRAVLJENO: Pravilno zajemanje ID-ja po vstavljanju
+        const [result] = await knex('Technologies').insert({
             name,
             description,
             image_url,
-        });
+        }).returning('id_Technologies');
 
+        const newTechnologyId = result.id_Technologies;
+        
         const newTechnology = await knex('Technologies').where('id_Technologies', newTechnologyId).first();
         res.status(201).json({
             message: 'Tehnologija je bila uspešno ustvarjena',

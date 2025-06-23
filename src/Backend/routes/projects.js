@@ -100,14 +100,17 @@ router.post('/', isAdmin, upload.single('image'), async (req, res) => {
       }
     }
     
-    const [newProjectId] = await knex('Projects').insert({
+    // POPRAVLJENO: Pravilno zajemanje ID-ja po vstavljanju
+    const [result] = await knex('Projects').insert({
       title,
       description,
       github_url,
       address_url,
       image_url,
       created_at: new Date()
-    });
+    }).returning('id_Project');
+    
+    const newProjectId = result.id_Project;
     
     // Insert project-technology relationships if technologies are provided
     if (selectedTechnologies.length > 0) {
