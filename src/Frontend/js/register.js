@@ -86,7 +86,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     try {
         // API call to backend register endpoint
         // SPREMEMBA: localhost:3000 -> api.devfolio.si
-        const response = await fetch('https://devfolio-nu8o.onrender.com/register', {
+        const response = await fetch('https://devfolio-nu8o.onrender.com', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
