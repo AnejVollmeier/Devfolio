@@ -4,7 +4,7 @@ exports.up = function(knex) {
     table.string('title', 20).notNullable();
     table.text('description').notNullable();
     table.string('github_url', 100).notNullable();
-    table.string('address_url', 100).notNullable();
+    table.string('address_url', 100);
     table.string('image_url', 255);
     table.timestamp('created_at').defaultTo(knex.fn.now());
     // Postgres nima unsigned()
