@@ -1,9 +1,43 @@
-// DevFolio Login JavaScript
-// Funkcionalnost za login stran
+// DevFolio Login JavaScript - Varnost proti XSS
+
+/**
+ * Sanitizira vnos in prepreči XSS
+ * @param {string} input Vnos, ki ga želimo sanitizirati
+ * @return {string} Sanitiziran vnos
+ */
+function sanitizeInput(input) {
+    if (!input) return '';
+    return String(input)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+/**
+ * Varno ustvari element z vsebino
+ * @param {string} tag HTML tag
+ * @param {string} content Vsebina elementa
+ * @param {Object} attributes Atributi elementa
+ * @return {HTMLElement} Ustvarjen element
+ */
+function createSafeElement(tag, content, attributes = {}) {
+    const element = document.createElement(tag);
+    if (content) {
+        element.textContent = content;
+    }
+    Object.entries(attributes).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+    });
+    return element;
+}
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
-    checkExistingLogin();    // Toggle password visibility
+    // Preveri, če je uporabnik že prijavljen
+    checkExistingLogin();
+    
+    // Preklapljanje vidnosti gesla
     const togglePasswordBtn = document.getElementById('togglePassword');
     if (togglePasswordBtn) {
         togglePasswordBtn.addEventListener('click', function() {
@@ -20,29 +54,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Login form handler
+    // Obdelava obrazca za prijavo
     const loginForm = document.getElementById('loginForm');
     if (loginForm) {
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-              const email = document.getElementById('username').value; // This field accepts email or username
+            
+            // Sanitizacija vnosov
+            const email = sanitizeInput(document.getElementById('username').value);
+            // Gesla ne sanitiziramo, saj mora ostati točno takšno, kot je bilo vneseno
             const password = document.getElementById('password').value;
             
-            // Simple validation
+            // Enostavna validacija
             if (!email || !password) {
                 showAlert('Prosimo, izpolnite vsa polja!', 'warning');
                 return;
             }
             
-            // Show loading state
+            // Prikaži stanje nalaganja
             const button = this.querySelector('button[type="submit"]');
-            const originalText = button.innerHTML;
-            button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Prijavljam...';
+            const originalButtonContent = button.innerHTML;
             button.disabled = true;
             
+            // Varno nastavi vsebino gumba za nalaganje
+            button.innerHTML = '';
+            const spinner = createSafeElement('span', null, {
+                class: 'spinner-border spinner-border-sm me-2'
+            });
+            button.appendChild(spinner);
+            button.appendChild(document.createTextNode('Prijavljam...'));
+            
             try {
-                // API call to backend login endpoint
-                // SPREMEMBA: localhost:3000 -> api.devfolio.si
+                // API klic na backend endpoint za prijavo
                 const response = await fetch('https://devfolio-nu8o.onrender.com/login', {
                     method: 'POST',
                     headers: {
@@ -51,14 +94,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     body: JSON.stringify({ email, password })
                 });
                 
-                const data = await response.json();                if (response.ok) {
-                    // Store token and user data (use consistent naming with other files)
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Shrani token in podatke uporabnika (uporabi dosledno poimenovanje z drugimi datotekami)
                     localStorage.setItem('authToken', data.token);
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
                     showAlert('Uspešno ste se prijavili! Preusmerjam...', 'success');
                     
-                    // Redirect after 1.5 seconds
+                    // Preusmeri po 1,5 sekundah
                     setTimeout(() => {
                         window.location.href = 'index.html';
                     }, 1500);
@@ -69,14 +114,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Login error:', error);
                 showAlert('Napaka pri povezavi s strežnikom', 'danger');
             } finally {
-                // Reset button
-                button.innerHTML = originalText;
+                // Ponastavi gumb
                 button.disabled = false;
+                button.innerHTML = originalButtonContent;
             }
         });
     }
 
-    // Add focus effects to form inputs
+    // Dodaj učinke fokusa na vnosna polja obrazca
     document.querySelectorAll('.form-control').forEach(input => {
         input.addEventListener('focus', function() {
             this.parentElement.classList.add('shadow-sm');
@@ -88,24 +133,33 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Show alert function
+// Varno prikaži obvestilo
 function showAlert(message, type) {
-    // Remove existing alerts
+    // Odstrani obstoječa obvestila
     const existingAlerts = document.querySelectorAll('.alert');
     existingAlerts.forEach(alert => alert.remove());
     
-    // Create new alert
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-    alertDiv.style.cssText = 'top: 100px; right: 20px; z-index: 9999; min-width: 300px;';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+    // Ustvari novo obvestilo z varno strukturo
+    const alertDiv = createSafeElement('div', null, {
+        class: `alert alert-${type} alert-dismissible fade show position-fixed`,
+        style: 'top: 100px; right: 20px; z-index: 9999; min-width: 300px;'
+    });
+    
+    // Dodaj sporočilo kot tekstovno vozlišče
+    const textNode = document.createTextNode(sanitizeInput(message));
+    alertDiv.appendChild(textNode);
+    
+    // Dodaj gumb za zapiranje
+    const closeButton = createSafeElement('button', null, {
+        type: 'button', 
+        class: 'btn-close', 
+        'data-bs-dismiss': 'alert'
+    });
+    alertDiv.appendChild(closeButton);
     
     document.body.appendChild(alertDiv);
     
-    // Auto remove after 5 seconds
+    // Samodejno odstrani po 5 sekundah
     setTimeout(() => {
         if (alertDiv.parentNode) {
             alertDiv.remove();
@@ -113,14 +167,14 @@ function showAlert(message, type) {
     }, 5000);
 }
 
-// Check if user is already logged in
+// Preveri, če je uporabnik že prijavljen
 function checkExistingLogin() {
     const token = localStorage.getItem('authToken');
     const user = localStorage.getItem('user');
     const rememberMe = localStorage.getItem('rememberMe');
     
     if (token && user && rememberMe === 'true') {
-        // User is already logged in and wants to be remembered
+        // Uporabnik je že prijavljen in želi biti zapomnjen
         showAlert('Že ste prijavljeni! Preusmerjam...', 'info');
         setTimeout(() => {
             window.location.href = 'index.html';

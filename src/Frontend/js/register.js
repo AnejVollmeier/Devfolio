@@ -1,6 +1,39 @@
-// Register page functionality
+// Register page functionality - z zaščito pred XSS
 
-// Toggle password visibility
+/**
+ * Sanitizira vnos in prepreči XSS
+ * @param {string} input Vnos, ki ga želimo sanitizirati
+ * @return {string} Sanitiziran vnos
+ */
+function sanitizeInput(input) {
+    if (!input) return '';
+    return String(input)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+/**
+ * Varno ustvari element z vsebino
+ * @param {string} tag HTML tag
+ * @param {string} content Vsebina elementa
+ * @param {Object} attributes Atributi elementa
+ * @return {HTMLElement} Ustvarjen element
+ */
+function createSafeElement(tag, content, attributes = {}) {
+    const element = document.createElement(tag);
+    if (content) {
+        element.textContent = content;
+    }
+    Object.entries(attributes).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+    });
+    return element;
+}
+
+// Preklapljanje vidnosti gesla
 document.getElementById('togglePassword').addEventListener('click', function() {
     const passwordInput = document.getElementById('password');
     const eyeIcon = document.getElementById('eyeIcon');
@@ -14,7 +47,7 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     }
 });
 
-// Toggle confirm password visibility
+// Preklapljanje vidnosti potrditve gesla
 document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
     const confirmPasswordInput = document.getElementById('confirmPassword');
     const confirmEyeIcon = document.getElementById('confirmEyeIcon');
@@ -28,21 +61,23 @@ document.getElementById('toggleConfirmPassword').addEventListener('click', funct
     }
 });
 
-// Register form handler
+// Obdelava obrazca za registracijo
 document.getElementById('registerForm').addEventListener('submit', async function(e) {
     e.preventDefault();
-      // Get form data
+    
+    // Pridobi podatke obrazca in sanitiziraj vnose
     const formData = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        email: document.getElementById('email').value,
-        username: document.getElementById('username').value,
+        firstName: sanitizeInput(document.getElementById('firstName').value),
+        lastName: sanitizeInput(document.getElementById('lastName').value),
+        email: sanitizeInput(document.getElementById('email').value),
+        username: sanitizeInput(document.getElementById('username').value),
+        // Gesel ne sanitiziramo, saj morajo ostati točno takšna, kot so bila vnesena
         password: document.getElementById('password').value,
         confirmPassword: document.getElementById('confirmPassword').value,
         acceptTerms: document.getElementById('acceptTerms').checked
     };
 
-    // Validation
+    // Validacija
     if (!formData.firstName || !formData.lastName || !formData.email || 
         !formData.username || !formData.password || !formData.confirmPassword) {
         showAlert('Prosimo, izpolnite vsa obvezna polja!', 'warning');
@@ -64,61 +99,67 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         return;
     }
 
-    // Email validation
+    // Validacija e-maila
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
         showAlert('Vnesite veljaven email naslov!', 'warning');
         return;
     }
 
-    // Username validation
+    // Validacija uporabniškega imena
     if (formData.username.length < 3) {
         showAlert('Uporabniško ime mora imeti vsaj 3 znake!', 'warning');
         return;
-    }    // Registration process
+    }
+    
+    // Postopek registracije
     const button = this.querySelector('button[type="submit"]');
     const originalText = button.innerHTML;
     
-    // Show loading state
-    button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Registriram...';
+    // Prikaži stanje nalaganja
     button.disabled = true;
+    button.innerHTML = '';
+    const spinner = createSafeElement('span', null, {
+        class: 'spinner-border spinner-border-sm me-2'
+    });
+    button.appendChild(spinner);
+    button.appendChild(document.createTextNode('Registriram...'));
     
     try {
-        // API call to backend register endpoint
-        // SPREMEMBA: localhost:3000 -> api.devfolio.si
+        // API klic na backend endpoint za registracijo
         const response = await fetch('https://devfolio-nu8o.onrender.com/register', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-        email: formData.email,
-        username: formData.username,
-        password: formData.password,
-        userType: 'Registered'
-    })
-});
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: formData.email,
+                username: formData.username,
+                password: formData.password,
+                userType: 'Registered'
+            })
+        });
 
         const data = await response.json();
 
-        // Reset button
+        // Ponastavi gumb
         button.innerHTML = originalText;
         button.disabled = false;
 
         if (response.ok) {
-            // Successful registration
+            // Uspešna registracija
             showAlert('Uspešno ste se registrirali! Preusmerjam na prijavo...', 'success');
             
-            // Redirect after 2 seconds
+            // Preusmeri po 2 sekundah
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);
         } else {
-            // Handle different error cases
+            // Obravnavaj različne primere napak
             showAlert(data.message || 'Napaka pri registraciji!', 'danger');
         }
     } catch (error) {
-        // Reset button
+        // Ponastavi gumb
         button.innerHTML = originalText;
         button.disabled = false;
         
@@ -127,24 +168,33 @@ document.getElementById('registerForm').addEventListener('submit', async functio
     }
 });
 
-// Show alert function
+// Varno prikaži obvestilo
 function showAlert(message, type) {
-    // Remove existing alerts
+    // Odstrani obstoječa obvestila
     const existingAlerts = document.querySelectorAll('.alert');
     existingAlerts.forEach(alert => alert.remove());
     
-    // Create new alert
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
-    alertDiv.style.cssText = 'top: 100px; right: 20px; z-index: 9999; min-width: 300px;';
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+    // Ustvari novo obvestilo s varno strukturo
+    const alertDiv = createSafeElement('div', null, {
+        class: `alert alert-${type} alert-dismissible fade show position-fixed`,
+        style: 'top: 100px; right: 20px; z-index: 9999; min-width: 300px;'
+    });
+    
+    // Dodaj sporočilo
+    const textNode = document.createTextNode(sanitizeInput(message));
+    alertDiv.appendChild(textNode);
+    
+    // Dodaj gumb za zapiranje
+    const closeButton = createSafeElement('button', null, {
+        type: 'button',
+        class: 'btn-close',
+        'data-bs-dismiss': 'alert'
+    });
+    alertDiv.appendChild(closeButton);
     
     document.body.appendChild(alertDiv);
     
-    // Auto remove after 5 seconds
+    // Samodejno odstrani po 5 sekundah
     setTimeout(() => {
         if (alertDiv.parentNode) {
             alertDiv.remove();
@@ -152,7 +202,7 @@ function showAlert(message, type) {
     }, 5000);
 }
 
-// Add focus effects to form inputs
+// Dodaj učinke fokusa na vnosna polja obrazca
 document.querySelectorAll('.form-control').forEach(input => {
     input.addEventListener('focus', function() {
         this.parentElement.classList.add('shadow-sm');
@@ -163,7 +213,7 @@ document.querySelectorAll('.form-control').forEach(input => {
     });
 });
 
-// Real-time password validation
+// Sprotna validacija gesla
 document.getElementById('password').addEventListener('input', function() {
     const password = this.value;
     const confirmPassword = document.getElementById('confirmPassword').value;
@@ -178,7 +228,7 @@ document.getElementById('password').addEventListener('input', function() {
         this.classList.remove('is-valid', 'is-invalid');
     }
     
-    // Check confirm password match
+    // Preveri ujemanje potrditve gesla
     if (confirmPassword.length > 0) {
         const confirmPasswordInput = document.getElementById('confirmPassword');
         if (password === confirmPassword) {
@@ -191,7 +241,7 @@ document.getElementById('password').addEventListener('input', function() {
     }
 });
 
-// Real-time confirm password validation
+// Sprotna validacija potrditve gesla
 document.getElementById('confirmPassword').addEventListener('input', function() {
     const password = document.getElementById('password').value;
     const confirmPassword = this.value;
