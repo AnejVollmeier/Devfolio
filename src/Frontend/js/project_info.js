@@ -1,5 +1,4 @@
 // API Configuration
-// SPREMEMBA: window.location.origin -> api.devfolio.si
 const API_BASE_URL = 'https://devfolio-nu8o.onrender.com';
 
 // DOM elements
@@ -75,29 +74,30 @@ async function loadProjectDetails(projectId) {
 
 // Function to display project details
 function displayProjectDetails(project) {
-    
     // Update document title
     document.title = `DevFolio - ${project.title}`;
-      // Basic information
+    // Basic information
     if (projectTitle) projectTitle.textContent = project.title || 'Neznan projekt';
     
     // Project image
     if (projectImage) {
-        const imageSrc = project.image_url ? 
-            `${API_BASE_URL}${project.image_url}` : 
-            'https://via.placeholder.com/400x250?text=Project+Image';
-        
+        const imageSrc = project.image_url
+            ? (project.image_url.startsWith('http')
+                ? project.image_url
+                : `${API_BASE_URL}${project.image_url}`)
+            : 'https://via.placeholder.com/400x250?text=Project+Image';
         projectImage.src = imageSrc;
         projectImage.alt = project.title;
         projectImage.onerror = function() {
             this.src = 'https://via.placeholder.com/400x250?text=Project+Image';
         };
     }
-      
+    
     // Date
     if (projectDate) {
         projectDate.textContent = formatDate(project.created_at);
-    }      // Project links - GitHub and Address URL
+    }
+    // Project links - GitHub and Address URL
     if (projectLinks) {
         projectLinks.innerHTML = '';
         
@@ -109,7 +109,8 @@ function displayProjectDetails(project) {
             const addressLink = createProjectLink(project.address_url, 'Spletna stran', 'bi-globe', 'btn-primary');
             projectLinks.appendChild(addressLink);
         }
-    }// Display project technologies
+    }
+    // Display project technologies
     if (project.technologies && project.technologies.length > 0) {
         displayProjectTechnologies(project.technologies);
     } else {
@@ -123,7 +124,7 @@ function displayProjectDetails(project) {
         const description = project.description || 'Opis projekta ni na voljo.';
         projectDescription.innerHTML = `<p>${description}</p>`;
     }
-      
+    
     // Show the details section
     if (detailsSection) {
         detailsSection.style.display = 'block';
@@ -161,7 +162,6 @@ function displayProjectLinks(project) {
 
 // Function to create project link
 function createProjectLink(url, text, icon, buttonClass) {
-    
     // Ensure URL has proper protocol
     let processedUrl = url;
     if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
@@ -207,9 +207,11 @@ function createTechnologyCard(tech) {
     const col = document.createElement('div');
     col.className = 'col-lg-3 col-md-4 col-sm-6';
     
-    const imageSrc = tech.image_url ? 
-        `${API_BASE_URL}${tech.image_url}` : 
-        'https://via.placeholder.com/80x80?text=Tech';
+    const imageSrc = tech.image_url
+        ? (tech.image_url.startsWith('http')
+            ? tech.image_url
+            : `${API_BASE_URL}${tech.image_url}`)
+        : 'https://via.placeholder.com/80x80?text=Tech';
     
     col.innerHTML = `
         <div class="card h-100 shadow-sm tech-card text-center">
