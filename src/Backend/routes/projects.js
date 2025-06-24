@@ -46,6 +46,7 @@ router.post('/', isAdmin, projectUpload.single('image'), async (req, res) => {
   try {
     const { title, description, github_url, address_url, technologies } = req.body;
     
+    // address_url ni več obvezen!
     if (!title || !description || !github_url) {
       return res.status(400).json({ error: 'Naslov, opis in GitHub URL projekta so obvezni' });
     }
@@ -71,7 +72,8 @@ router.post('/', isAdmin, projectUpload.single('image'), async (req, res) => {
       title,
       description,
       github_url,
-      address_url,
+      // address_url je lahko undefined ali prazen string, kar je okej za nullable field!
+      address_url: address_url || null,
       image_url,
       created_at: new Date()
     }).returning('id_Project');
@@ -147,6 +149,7 @@ router.put('/:id', isAdmin, projectUpload.single('image'), async (req, res) => {
         title: title || existingProject.title,
         description: description || existingProject.description,
         github_url: github_url !== undefined ? github_url : existingProject.github_url,
+        // address_url ni obvezen, če ni podan, pusti prejšnjega ali nastavi na null
         address_url: address_url !== undefined ? address_url : existingProject.address_url,
         image_url: image_url,
       });
