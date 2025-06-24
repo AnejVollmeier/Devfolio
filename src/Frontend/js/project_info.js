@@ -105,7 +105,7 @@ function displayProjectDetails(project) {
             const githubLink = createProjectLink(project.github_url, 'GitHub', 'bi-github', 'btn-dark');
             projectLinks.appendChild(githubLink);
         }
-        if (project.address_url) {
+        if (project.address_url && project.address_url.trim() !== '') {
             const addressLink = createProjectLink(project.address_url, 'Spletna stran', 'bi-globe', 'btn-primary');
             projectLinks.appendChild(addressLink);
         }
