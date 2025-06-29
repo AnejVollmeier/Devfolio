@@ -50,7 +50,7 @@ Glavni namen spletne strani [devfolio.si](https://devfolio.si/) je ustvariti spl
 - PostgreSQL strežnik pa se prav tako nahaja na spletni strani Render.
 - Za shranjevanje slik smo pa uporabili platformo [cloudinary.com](https://cloudinary.com/).
 
-## Uporaba
+### Informacije dostopu domene
 Spletno stran lahko najdete na [devfolio.si](https://devfolio.si/), spletna stran bo najverjetneje dostopna do konca studija, torej do okrog junija 2027.
 
 ## Avtor:
