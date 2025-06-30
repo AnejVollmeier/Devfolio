@@ -33,7 +33,6 @@ Glavni namen spletne strani [devfolio.si](https://devfolio.si/) je ustvariti spl
 - **Node.js** - strežniško okolje
 - **Express.js** - ogrodje za razvoj spletnega strežnika
 - **Knex.js** - SQL query builder za lažjo interakcijo s podatkovno bazo
-- **Bookshelf.js** - ORM za definiranje modelov in relacij
 - **migrations** - ustvarjanje tabel za podatkovno bazo
 
 ### Podatkovna baza:
@@ -54,5 +53,4 @@ Glavni namen spletne strani [devfolio.si](https://devfolio.si/) je ustvariti spl
 Spletno stran lahko najdete na [devfolio.si](https://devfolio.si/), spletna stran bo najverjetneje dostopna do konca studija, torej do okrog junija 2027.
 
 ## Avtor:
-
 - Anej Vollmeier
