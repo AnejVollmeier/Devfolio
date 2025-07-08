@@ -33,7 +33,6 @@ Glavni namen spletne strani [devfolio.si](https://devfolio.si/) je ustvariti spl
 - **Node.js** - strežniško okolje
 - **Express.js** - ogrodje za razvoj spletnega strežnika
 - **Knex.js** - SQL query builder za lažjo interakcijo s podatkovno bazo
-- **migrations** - ustvarjanje tabel za podatkovno bazo
 
 ### Podatkovna baza:
 - **PostgreSQL** - za shranjevanje vseh podatkov
@@ -42,6 +41,7 @@ Glavni namen spletne strani [devfolio.si](https://devfolio.si/) je ustvariti spl
 - **Cloudinary** - za shranjevanje in upravljanje slik projektov in tehnologij
 - **JWT (JSON Web Tokens)** - za avtentikacijo uporabnikov
 - **bcrypt** - za varno shranjevanje gesel
+- **migrations** - ustvarjanje tabel za podatkovno bazo
 
 ### Cloud arhitektura
 - Frontend del spletne strani gostujem na brezplačni platformi [netlify.com](https://www.netlify.com/).
